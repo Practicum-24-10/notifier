@@ -55,11 +55,11 @@ jobs:
           MESSAGE+="with error."
 
           # Check which step failed and add it to the message
-          if steps.linting.outcome == 'failure'; then
+          if [ ${{ steps.linting.outcome }} == 'failure' ]; then
             MESSAGE+="\nFailed step: Linting"
-          elif steps.type_checking.outcome == 'failure'; then
+          elif [ ${{ steps.type_checking.outcome }} == 'failure'; then
             MESSAGE+="\nFailed step: Type checking"
-          elif steps.tests.outcome == 'failure'; then
+          elif [ ${{ steps.tests.outcome }} == 'failure'; then
             MESSAGE+="\nFailed step: Tests"
           fi
         fi
