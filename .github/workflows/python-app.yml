@@ -49,7 +49,7 @@ jobs:
           MESSAGE+="successfully! 🎉"
         else
           MESSAGE+="with error."
-          FAILED_STEP_NAME="${{ steps.test.outcome }}"
+          FAILED_STEP_NAME="${{ steps.test.name }}"
           MESSAGE+=" Failed step: $FAILED_STEP_NAME"
         fi
         curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
