@@ -1,5 +1,11 @@
 # Notification Service
 
+### pre-commit
+```
+pip install -r requirements.txt
+pre-commit install
+```
+
 ### Запуск приложения
 - Создать файл .env в директории backend/ по примеру backend/.env.example и из корня проекта выполнить команду:
 ```
@@ -16,11 +22,4 @@ docker compose -f backend/docker-compose.yml -f backend/docker-compose.override.
 - Выполнить команду:
 ```
 docker compose -f backend/tests/functional/docker-compose.yml up
-```
-
-
-### pre-commit
-```
-pip install -r requirements.txt
-pre-commit install
 ```
