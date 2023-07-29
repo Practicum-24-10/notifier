@@ -34,6 +34,7 @@ jobs:
         pyright backend/src/
 
     - name: Running tests in Docker Compose
+      id: test
       run: docker-compose -f backend/tests/functional/docker-compose.yml up --exit-code-from tests
 
     - name: Send Telegram notification on success or failure
@@ -48,7 +49,7 @@ jobs:
           MESSAGE+="successfully! 🎉"
         else
           MESSAGE+="with error."
-          FAILED_STEP_NAME="${{ job.stepsRun }}"
+          FAILED_STEP_NAME="${{ steps.test.outcome }}"
           MESSAGE+=" Failed step: $FAILED_STEP_NAME"
         fi
         curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
