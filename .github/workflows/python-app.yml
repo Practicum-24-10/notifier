@@ -48,7 +48,8 @@ jobs:
           MESSAGE+="successfully! 🎉"
         else
           MESSAGE+="with error."
-          MESSAGE+="\nFailed step: ${{ steps.name }}"
+          FAILED_STEP_NAME="${{ job.steps[steps.failure-reason].name }}"
+          MESSAGE+=" Failed step: $FAILED_STEP_NAME"
         fi
         curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
           -d "chat_id=$TELEGRAM_CHAT_ID" \
