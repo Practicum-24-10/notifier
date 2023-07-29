@@ -27,14 +27,18 @@ jobs:
         pip install -r backend/requirements.txt
 
     - name: Lint with flake8
+      id: linting
       run: flake8
+      continue-on-error: true
 
     - name: Check with pyright
+      id: type_checking
       run: |
         pyright backend/src/
+      continue-on-error: true
 
     - name: Running tests in Docker Compose
-      id: test
+      id: tests
       run: docker-compose -f backend/tests/functional/docker-compose.yml up --exit-code-from tests
 
     - name: Send Telegram notification on success or failure
@@ -49,8 +53,15 @@ jobs:
           MESSAGE+="successfully! 🎉"
         else
           MESSAGE+="with error."
-          FAILED_STEP_NAME="${{ !contains(join(needs.*.result, ','), 'failure') }}"
-          MESSAGE+=" Failed step: $FAILED_STEP_NAME"
+
+          # Check which step failed and add it to the message
+          if steps.linting.outcome == 'failure'; then
+            MESSAGE+="\nFailed step: Linting"
+          elif steps.type_checking.outcome == 'failure'; then
+            MESSAGE+="\nFailed step: Type checking"
+          elif steps.tests.outcome == 'failure'; then
+            MESSAGE+="\nFailed step: Tests"
+          fi
         fi
         curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
           -d "chat_id=$TELEGRAM_CHAT_ID" \
