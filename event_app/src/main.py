@@ -39,8 +39,8 @@ async def shutdown():
     pass
 
 
-app.include_router(review_router, prefix="/api/v1/reviews/event", tags=["event"])
-app.include_router(signup_router, prefix="/api/v1/signup/event", tags=["event"])
+app.include_router(review_router, prefix="/api/v1/event/reviews", tags=["event"])
+app.include_router(signup_router, prefix="/api/v1/event/signup", tags=["event"])
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
