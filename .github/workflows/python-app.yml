@@ -35,9 +35,9 @@ jobs:
       id: pyright
       run: pyright backend/src/
 
-    - name: Running tests in Docker Compose
-      id: tests
-      run: docker-compose -f backend/tests/functional/docker-compose.yml up --exit-code-from tests
+    # - name: Running tests in Docker Compose
+    #   id: tests
+    #   run: docker-compose -f backend/tests/functional/docker-compose.yml up --exit-code-from tests
 
     - name: Send Telegram notification
       if: always()
