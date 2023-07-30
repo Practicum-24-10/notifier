@@ -27,9 +27,11 @@ jobs:
         pip install -r backend/requirements.txt
 
     - name: Lint with flake8
+      id: flake8
       run: flake8
 
     - name: Check with pyright
+      id: pyright
       run: |
         pyright backend/src/
 
@@ -37,7 +39,7 @@ jobs:
       id: tests
       run: docker-compose -f backend/tests/functional/docker-compose.yml up --exit-code-from tests
 
-    - name: Send Telegram notification on success or failure
+    - name: Send Telegram notification
       if: always()
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -49,7 +51,11 @@ jobs:
           MESSAGE+="successfully! 🎉"
         else
           MESSAGE+="with error. Failed step: "
-          if [ ${{ steps.tests.outcome }} == failure ]; then
+          if [ ${{ steps.flake8.outcome }} == failure ]; then
+          MESSAGE+="flake8"
+          elif [ ${{ steps.pyright.outcome }} == failure ]; then
+          MESSAGE+="pyright"
+          elif [ ${{ steps.tests.outcome }} == failure ]; then
           MESSAGE+="tests"
           fi
         fi
