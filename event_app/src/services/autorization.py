@@ -3,10 +3,10 @@ from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import DecodeError, ExpiredSignatureError, InvalidSignatureError
 
-from backend.src.auth.abc_key import AbstractKey
-from backend.src.auth.rsa_key import get_pk
-from backend.src.local.services import autorization as errors
-from backend.src.models.jwt import JWTPayload
+from event_app.src.auth.abc_key import AbstractKey
+from event_app.src.auth.rsa_key import get_pk
+from event_app.src.local.services import autorization as errors
+from event_app.src.models.jwt import JWTPayload
 
 security = HTTPBearer(auto_error=False)
 

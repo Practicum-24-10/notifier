@@ -4,7 +4,7 @@ from logging import config as logging_config
 import dotenv
 from pydantic import BaseSettings
 
-from backend.src.core.logger import LOGGING
+from event_app.src.core.logger import LOGGING
 
 dotenv.load_dotenv()
 

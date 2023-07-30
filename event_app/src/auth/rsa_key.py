@@ -1,4 +1,4 @@
-from backend.src.auth.abc_key import AbstractKey
+from event_app.src.auth.abc_key import AbstractKey
 
 pk: AbstractKey | None = None
 
