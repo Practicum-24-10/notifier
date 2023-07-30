@@ -11,10 +11,7 @@ from message.models.message_signup import MessageSignUp
 
 class SignUpService(MixinModel):
     async def send_signup(self, user_id: UUID, email: str):
-        data = {
-            'user_id': str(user_id),
-            'email': email
-        }
+        data = {"user_id": str(user_id), "email": email}
         message = MessageSignUp(recipients=[user_id], data=data)
         response = await self._send_to_broker(message)
         if response:
@@ -24,6 +21,6 @@ class SignUpService(MixinModel):
 
 @lru_cache()
 def get_signup_service(
-        broker: AbstractBroker = Depends(get_broker),
+    broker: AbstractBroker = Depends(get_broker),
 ) -> SignUpService:
     return SignUpService(broker)

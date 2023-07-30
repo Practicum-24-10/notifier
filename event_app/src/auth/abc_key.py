@@ -23,9 +23,9 @@ class RsaKey(AbstractKey):
     def __init__(self, path: str, algorithms: list[str]):
         self._load(path)
         self.algorithms = algorithms
-        self.pl_permissions = 'permissions'
-        self.pl_is_superuser = 'is_superuser'
-        self.pl_sub = 'sub'
+        self.pl_permissions = "permissions"
+        self.pl_is_superuser = "is_superuser"
+        self.pl_sub = "sub"
 
     def _load(self, path: str):
         self.key = open(path).read()

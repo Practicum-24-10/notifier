@@ -10,10 +10,9 @@ from event_app.src.api.v1.review_api import router as review_router
 from event_app.src.api.v1.signup_api import router as signup_router
 from event_app.src.auth import rsa_key
 from event_app.src.auth.abc_key import RsaKey
-from event_app.src.broker import rabbit_mq, RabbitBroker
+from event_app.src.broker import RabbitBroker, rabbit_mq
 from event_app.src.core.config import DSN, PUBLIC_KEY, config
 from event_app.src.core.logger import LOGGING
-
 
 if config.logging_on:
     sentry_sdk.init(dsn=DSN, integrations=[FastApiIntegration()])
@@ -38,6 +37,7 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     pass
+
 
 app.include_router(review_router, prefix="/api/v1/reviews/event", tags=["event"])
 app.include_router(signup_router, prefix="/api/v1/signup/event", tags=["event"])
