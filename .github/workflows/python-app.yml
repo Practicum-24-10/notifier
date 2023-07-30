@@ -32,8 +32,7 @@ jobs:
 
     - name: Check with pyright
       id: pyright
-      run: |
-        pyright backend/src/
+      run: pyright backend/src/
 
     - name: Running tests in Docker Compose
       id: tests
