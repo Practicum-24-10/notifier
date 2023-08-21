@@ -1,0 +1,29 @@
+@startuml
+
+
+
+autonumber
+
+== Отправка юзеру приветственного письма ==
+
+ExternalService -> API: Отправить юзеру приветственное письмо
+API -> API: Валидация
+API --> ExternalService: Принято в обработку
+API -> EnrichmentQueue: Добавить в очередь обогащения
+
+EnrichmentQueue -> WorkerEnricher: Обогатить
+WorkerEnricher -> Auth: Запросить данные о юзере
+
+Auth --> WorkerEnricher: Успешно
+
+WorkerEnricher -> TemplateDB: Получить шаблон по id
+TemplateDB --> WorkerEnricher: Ok
+WorkerEnricher -> WorkerEnricher: Сформировать сообщение
+
+WorkerEnricher -> SendingQueue: Добавить в очередь рассылки
+
+SendingQueue -> WorkerSender: Обработать сообщение
+WorkerSender -> Client: Отправить сообщение юзеру
+
+
+@enduml

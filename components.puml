@@ -1,0 +1,51 @@
+@startuml as_is
+!theme materia
+
+skinparam default {
+    FontName Arial
+    FontSize 16
+}
+
+skinparam component {
+    Style uml2
+    BackgroundColor #f1f1f1
+    FontColor #000
+}
+
+skinparam note {
+    BackgroundColor #f1f1f1
+    FontColor #000
+}
+
+skinparam database {
+    BackgroundColor #f1f1f1
+}
+
+skinparam FrameBorderColor #596bed
+skinparam FrameBackgroundColor #f6fdff
+skinparam RectangleBorderColor #Lime
+skinparam RectangleBackgroundColor #TECHNOLOGY
+
+actor Client
+
+component API
+component WorkerSender
+component WorkerEnricher
+component EventGenerator
+component AdminPanel
+
+queue EnrichmentQueue
+queue SendingQueue
+
+
+
+API -> EnrichmentQueue
+EnrichmentQueue -> WorkerEnricher
+WorkerEnricher -> SendingQueue
+SendingQueue <-> WorkerSender
+WorkerSender -> Client
+EventGenerator -down-> API
+AdminPanel -up-> API
+
+
+@enduml
