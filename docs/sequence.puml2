@@ -1,0 +1,44 @@
+@startuml
+
+autonumber
+
+== Отправка юзеру приветственного письма ==
+
+Auth -> API: Юзер зарегистрировался (List[user_id], template_id)
+API -> API: Валидация
+
+alt success
+    API --> Auth: Принято в обработку
+else unsseccess
+    API --> Auth: Bad request
+    destroy Auth
+end
+
+API -> EnrichmentQueue: Добавить в очередь обогащения
+
+EnrichmentQueue -> WorkerEnricher: Обогатить
+WorkerEnricher -> Auth: Запросить данные о юзере
+
+Auth --> WorkerEnricher: Успешно
+
+WorkerEnricher -> TemplateDB: Получить шаблон по id
+TemplateDB --> WorkerEnricher: Ok
+WorkerEnricher -> WorkerEnricher: Сформировать сообщение
+
+WorkerEnricher -> SendingQueue: Добавить в очередь рассылки
+
+SendingQueue -> WorkerSender: Обработать сообщение
+
+loop not successful
+    WorkerSender -> Client: Отправить сообщение юзеру
+    alt success
+        Client -> WorkerSender: Уведомление доставленно
+        destroy WorkerSender
+    else unsseccess
+        Client -> WorkerSender: Уведомление не доставленно
+        WorkerSender -> UnsuccessQueue: Добавить в очередь неудачных отправлений
+        UnsuccessQueue -> WorkerSender: Повторить отправку
+    end
+end
+
+@enduml
