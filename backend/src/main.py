@@ -32,7 +32,7 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup():
     rabbit_mq.rabbit = RabbitBroker(rabbitmq_host=config.rabbit_url)
-    await rabbit_mq.rabbit.connect()
+    await rabbit_mq.rabbit.start("api")
     rsa_key.pk = RsaKey(path=PUBLIC_KEY, algorithms=["RS256"])
 
 
