@@ -1,2 +1,2 @@
-from .authorization import *
-from .review import *
+from .authorization import * # noqa
+from .review import * # noqa

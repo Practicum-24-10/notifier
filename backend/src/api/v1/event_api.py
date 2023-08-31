@@ -12,8 +12,9 @@ router = APIRouter()
 
 class Event(BaseModel):
     user_ids: list[UUID] = Field(
-        title="ID пользователей", example=["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
-        min_items=1
+        title="ID пользователей",
+        example=["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
+        min_items=1,
     )
     template_id: UUID = Field(
         title="ID Шаблона", example="3fa85f64-5717-4562-b3fc-2c963f66afa6"
@@ -35,8 +36,8 @@ class EventResponse(BaseModel):
     summary="Отправка события",
 )
 async def add_event(
-        event: Event = Body(...),
-        event_service: EventService = Depends(get_event_service),
+    event: Event = Body(...),
+    event_service: EventService = Depends(get_event_service),
 ):
     response = await event_service.send_event(
         event.user_ids, event.template_id, event.delay

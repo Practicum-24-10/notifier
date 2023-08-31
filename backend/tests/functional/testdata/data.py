@@ -5,10 +5,17 @@ users = [
         "user_ids": ["01668588-eb19-4475-a1d2-42ef15e4da49"],
     },
     {
-        "user_ids": ["de04da00-bd55-4cb3-a05e-63a6ff430d09","01668588-eb19-4475-a1d2-42ef15e4da49"],
+        "user_ids": [
+            "de04da00-bd55-4cb3-a05e-63a6ff430d09",
+            "01668588-eb19-4475-a1d2-42ef15e4da49",
+        ],
     },
     {
-        "user_ids": ["de04da00-bd55-4cb3-a05e-63a6ff430d09","01668588-eb19-4475-a1d2-42ef15e4da49","a7af6bae-7402-4776-b071-8c41b9b3cd0c",],
+        "user_ids": [
+            "de04da00-bd55-4cb3-a05e-63a6ff430d09",
+            "01668588-eb19-4475-a1d2-42ef15e4da49",
+            "a7af6bae-7402-4776-b071-8c41b9b3cd0c",
+        ],
     },
     {
         "user_ids": ["a1d8e42b-ea88-4c92-81cf-d32b21902ac8"],
