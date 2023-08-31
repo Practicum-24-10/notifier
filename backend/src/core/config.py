@@ -12,7 +12,6 @@ dotenv.load_dotenv()
 class AppSettings(BaseSettings):
     project_name: str = "Some project name"
     logging_on: bool = True
-    rabbit_url: str = "amqp://admin:admin@127.0.0.1:5672/"
 
 
 config = AppSettings()
