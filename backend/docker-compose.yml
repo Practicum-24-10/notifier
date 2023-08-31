@@ -3,7 +3,7 @@ version: '3.9'
 services:
     backend:
       build: .
-      image: backend-event-image
+      image: backend-image
       env_file:
         - .env
       healthcheck:
@@ -13,21 +13,6 @@ services:
         retries: 5
       expose:
         - 8000
-      depends_on:
-        rabbit:
-          condition: service_healthy
-    rabbit:
-      image: rabbitmq:3-management
-      container_name: rabbit
-      ports:
-        - 5672:5672
-        - 15672:15672
-        - 25672:25672
-      healthcheck:
-        test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
-        interval: 10s
-        timeout: 5s
-        retries: 30
 
     nginx:
       image: nginx:1.23.4-alpine
@@ -44,7 +29,7 @@ services:
         driver: gelf
         options:
           gelf-address: udp://127.0.0.1:5044
-          tag: nginx
+          tag: nginx 
 
     logstash:
       image: logstash:7.10.1
@@ -53,7 +38,7 @@ services:
       volumes:
         - ./configs/logstash.conf:/config/logstash.conf:ro
         - ./tmp/logs/nginx/:/var/log/nginx/:ro
-      command: logstash -f /config/logstash.conf
+      command: logstash -f /config/logstash.conf 
 
     elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
@@ -61,7 +46,7 @@ services:
         discovery.type: single-node
       volumes:
         - ./tmp/esdata:/tmp/elasticsearch/data
-
+      
     kibana:
       image: docker.elastic.co/kibana/kibana:7.10.2
       depends_on:

@@ -12,8 +12,8 @@ security = HTTPBearer(auto_error=False)
 
 
 async def get_token_payload(
-    authorization: HTTPAuthorizationCredentials | None = Depends(security),
-    pk: AbstractKey = Depends(get_pk),
+        authorization: HTTPAuthorizationCredentials | None = Depends(security),
+        pk: AbstractKey = Depends(get_pk)
 ) -> None | JWTPayload:
     if authorization is not None:
         token = authorization.credentials
@@ -22,14 +22,18 @@ async def get_token_payload(
             return JWTPayload(
                 is_superuser=payload[pk.pl_is_superuser],
                 permissions=payload[pk.pl_permissions],
-                user_id=payload[pk.pl_sub],
+                user_id=payload[pk.pl_sub]
             )
         except ExpiredSignatureError:
-            raise HTTPException(status_code=403, detail=errors.TOKEN_EXPIRED)
+            raise HTTPException(status_code=403,
+                                detail=errors.TOKEN_EXPIRED)
         except InvalidSignatureError:
-            raise HTTPException(status_code=403, detail=errors.TOKEN_VER_FAILED)
+            raise HTTPException(status_code=403,
+                                detail=errors.TOKEN_VER_FAILED)
         except DecodeError:
-            raise HTTPException(status_code=403, detail=errors.TOKEN_BAD_DECODE)
+            raise HTTPException(status_code=403,
+                                detail=errors.TOKEN_BAD_DECODE)
         except KeyError:
-            raise HTTPException(status_code=403, detail=errors.TOKEN_BAD_PAYLOAD)
+            raise HTTPException(status_code=403,
+                                detail=errors.TOKEN_BAD_PAYLOAD)
     return None

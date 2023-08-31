@@ -7,6 +7,7 @@ def orjson_dumps(v, *, default):
 
 
 class OrjsonMixin(BaseModel):
+
     class Config:
         json_loads = orjson.loads
         json_dumps = orjson_dumps
