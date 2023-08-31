@@ -5,7 +5,7 @@ from fastapi import Depends
 
 from backend.src.broker import AbstractBroker
 from backend.src.broker.rabbit_mq import get_broker
-from backend.src.models.model_mixin import EnricherIn
+from backend.src.models.broker_model import EnricherIn
 from backend.src.services.mixin import MixinModel
 
 

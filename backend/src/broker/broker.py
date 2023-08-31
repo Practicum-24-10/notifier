@@ -2,9 +2,8 @@ from abc import ABC
 
 import aio_pika
 import orjson
-from aio_pika.abc import AbstractRobustChannel
 
-from backend.src.models.model_mixin import MixinModel
+from backend.src.models.broker_model import MixinModel
 
 
 class AbstractBroker(ABC):

@@ -1,7 +1,6 @@
 version: '3.9'
 
 services:
-
     backend:
       build: ../../.
       image: backend-event-image
@@ -14,6 +13,9 @@ services:
         retries: 5
       expose:
         - 8000
+      depends_on:
+        rabbit:
+          condition: service_healthy
 
     tests:
       image: backend-event-image
@@ -25,3 +27,15 @@ services:
         && pytest src_tests"
       depends_on:
         - backend
+    rabbit:
+      image: rabbitmq:3-management
+      container_name: rabbit
+      ports:
+        - 5672:5672
+        - 15672:15672
+        - 25672:25672
+      healthcheck:
+        test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+        interval: 10s
+        timeout: 5s
+        retries: 30

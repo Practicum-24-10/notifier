@@ -1,7 +1,7 @@
 from abc import ABC
 
 from backend.src.broker import AbstractBroker
-from backend.src.models.model_mixin import EnricherIn
+from backend.src.models.broker_model import EnricherIn
 
 
 class AbstractMixin(ABC):
