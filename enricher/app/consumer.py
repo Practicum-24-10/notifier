@@ -1,3 +1,6 @@
+import json
+
+
 class RabbitMQConsumer:
     def __init__(self, queue_name, connection):
         self.queue_name = queue_name
@@ -10,4 +13,4 @@ class RabbitMQConsumer:
         async with queue.iterator() as queue_iter:
             async for message in queue_iter:
                 async with message.process():
-                    await callback(message.body.decode())
+                    await callback(json.loads(json.loads(message.body.decode())))

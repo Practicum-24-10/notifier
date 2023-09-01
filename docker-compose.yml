@@ -3,8 +3,7 @@ version: '3.9'
 services:
     backend:
       build:
-        context: .
-        dockerfile: ./backend/Dockerfile
+        context: ./backend
       image: backend-event-image
       env_file:
         - ./backend/.env
@@ -15,13 +14,29 @@ services:
         retries: 5
       expose:
         - 8000
+      depends_on:
+        rabbit:
+          condition: service_healthy
+
+    rabbit:
+      image: rabbitmq:3-management
+      container_name: rabbit
+      ports:
+        - 5672:5672
+        - 15672:15672
+        - 25672:25672
+      healthcheck:
+        test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+        interval: 10s
+        timeout: 5s
+        retries: 30
 
     nginx:
       image: nginx:1.23.4-alpine
       volumes:
-        - ./nginx.conf:/etc/nginx/nginx.conf:ro
-        - ./configs/nginx:/etc/nginx/conf.d:ro
-        - ./tmp/logs/nginx/:/var/log/nginx/
+        - ./backend/nginx.conf:/etc/nginx/nginx.conf:ro
+        - ./backend/configs/nginx:/etc/nginx/conf.d:ro
+        - ./backend/tmp/logs/nginx/:/var/log/nginx/
       depends_on:
         backend:
           condition: service_healthy
@@ -38,8 +53,8 @@ services:
       environment:
         ES_HOST: "elasticsearch:9200"
       volumes:
-        - ./configs/logstash.conf:/config/logstash.conf:ro
-        - ./tmp/logs/nginx/:/var/log/nginx/:ro
+        - ./backend/configs/logstash.conf:/config/logstash.conf:ro
+        - ./backend/tmp/logs/nginx/:/var/log/nginx/:ro
       command: logstash -f /config/logstash.conf 
 
     elasticsearch:
@@ -58,7 +73,7 @@ services:
       image: elastic/filebeat:7.3.2
       volumes:
         - ./tmp/logs/nginx:/var/log/nginx:ro
-        - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml
+        - ./backend/configs/filebeat.yml:/usr/share/filebeat/filebeat.yml
       depends_on:
         - backend
         - nginx
@@ -68,23 +83,11 @@ services:
       links:
         - logstash
 
-    rabbit:
-      image: rabbitmq:3-management
-      container_name: rabbit
-      ports:
-        - 5672:5672
-        - 15672:15672
-        - 25672:25672
-      healthcheck:
-        test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
-        interval: 10s
-        timeout: 5s
-        retries: 30
-
     enricher:
       build:
-        context: .
-        dockerfile: ./enricher/Dockerfile
+        context: ./enricher
+      env_file:
+        - ./enricher/.env
       depends_on:
         rabbit:
           condition: service_healthy
