@@ -24,11 +24,10 @@ class EmailSender():
         server = smtplib.SMTP_SSL(
             self.email_params.address, self.email_params.port)
         server.login(self.email_params.login, self.email_params.password)
-        return server
+        self.server = server
 
     def send(self, data: EmailTemplate):
         """Send message for declared addresses"""
-        server = self._get_smtp_server_connection()
         logger.warning("SMTP connection made")
         # Forming message
         message = EmailMessage()
@@ -39,7 +38,7 @@ class EmailSender():
         # message.add_alternative(data.letter, subtype='html')
         # Sending message
         if self._allow_sending(data.notification_id, data.user_id):
-            server.send_message(message)
+            self.server.send_message(message)
             # Write sending confirmation to DB
             notification = Notification(
                 notification_id=data.notification_id,
@@ -48,8 +47,6 @@ class EmailSender():
                 type='email'
             )
             self.database.save_notification_to_db(notification)
-        # Closing connection
-        server.close()
 
     def _allow_sending(self, notification_id: uuid.UUID, user_id: uuid.UUID):
         """Checks whenever message with provided notification_id
