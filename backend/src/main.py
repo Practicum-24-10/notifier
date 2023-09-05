@@ -1,5 +1,5 @@
 import logging
-
+from contextlib import asynccontextmanager
 import sentry_sdk
 import uvicorn
 from fastapi import FastAPI
@@ -8,32 +8,42 @@ from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 from backend.src.api.v1.event_api import router as event_router
 
-# from backend.src.api.v1.signup_api import router as signup_router
 from backend.src.auth import rsa_key
 from backend.src.auth.abc_key import RsaKey
 from backend.src.broker import RabbitBroker, rabbit_mq
-from backend.src.core.config import DSN, PUBLIC_KEY, config
+from backend.src.core.config import PUBLIC_KEY, config
 from backend.src.core.logger import LOGGING
 
 if config.logging_on:
-    sentry_sdk.init(dsn=DSN, integrations=[FastApiIntegration()])
+    sentry_sdk.init(dsn=config.sentry_dsn, integrations=[FastApiIntegration()])
 
     logging.basicConfig(**LOGGING)
     log = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    rabbit_mq.rabbit = RabbitBroker(rabbitmq_host=config.rabbit_url)
+    await rabbit_mq.rabbit.start("api")
+    rsa_key.pk = RsaKey(path=PUBLIC_KEY, algorithms=["RS256"])
+    yield
+    await rabbit_mq.rabbit.close()
+
 
 app = FastAPI(
     title=config.project_name,
     docs_url="/api/openapi",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
+    lifespan=lifespan
 )
 
 
-@app.on_event("startup")
-async def startup():
-    rabbit_mq.rabbit = RabbitBroker(rabbitmq_host=config.rabbit_url)
-    await rabbit_mq.rabbit.start("api")
-    rsa_key.pk = RsaKey(path=PUBLIC_KEY, algorithms=["RS256"])
+# @app.on_event("startup")
+# async def startup():
+#     rabbit_mq.rabbit = RabbitBroker(rabbitmq_host=config.rabbit_url)
+#     await rabbit_mq.rabbit.start("api")
+#     rsa_key.pk = RsaKey(path=PUBLIC_KEY, algorithms=["RS256"])
 
 
 @app.on_event("shutdown")
