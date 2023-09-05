@@ -16,7 +16,10 @@ async def main():
     producer = RabbitMQProducer(
         queue_name=config.sending_queue, connection=rabbit.connection
     )
-    handler = MessageHandler(producer)
+    backoff = RabbitMQProducer(
+        queue_name=config.enrichment_queue, connection=rabbit.connection
+    )
+    handler = MessageHandler(producer, backoff)
     try:
         await consumer.start_consuming(handler.send_message)
     finally:
