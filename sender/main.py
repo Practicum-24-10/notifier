@@ -29,5 +29,5 @@ if __name__ == "__main__":
         postgres_service = NotificationPostgresService(
             connection=pg_conn, tablename='notifications')
         email_sender = EmailSender(email_service_config, postgres_service)
-
-        asyncio.run(main(email_sender))
+        with email_sender._get_smtp_server_connection():
+            asyncio.run(main(email_sender))
