@@ -34,5 +34,9 @@ class RabbitBroker(AbstractBroker):
             else:
                 raise
             return True
-        except Exception:
+        except aio_pika.exceptions.AMQPError:
             return False
+
+    async def close(self):
+        if self._connection is not None:
+            await self._connection.close()

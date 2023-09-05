@@ -1,25 +1,15 @@
 # Notification Service
 
-### pre-commit
-```
-pip install -r requirements.txt
-pre-commit install
-```
 
 ### Запуск приложения
-- Создать файл .env в директории backend/ по примеру backend/.env.example и из корня проекта выполнить команду:
+- Создать файлы .env по примерам в соответсвующих директориях backend, enricher, sender и из корня проекта выполнить команду:
 ```
-docker compose -f backend/docker-compose.yml up
-```
-
-### Запуск приложения для разработки (с проброской портов и монтированием директории приложения)
-- Создать файл .env в директории backend/ по примеру backend/.env.example и из корня проекта выполнить команду:
-```
-docker compose -f backend/docker-compose.yml -f backend/docker-compose.override.yml up
+docker compose up
 ```
 
-### Запуск тестов pytest
-- Выполнить команду:
-```
-docker compose -f backend/tests/functional/docker-compose.yml up
-```
+### Диаграмма компонентов
+![Диаграмма компонентов](https://github.com/Practicum-24-10/notifier/blob/main/docs/components.png)
+
+
+### Диаграмма последовательности
+![Диаграмма компонентов](https://github.com/Practicum-24-10/notifier/blob/main/docs/sequence.png)
