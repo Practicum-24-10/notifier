@@ -10,8 +10,22 @@ class AppSettings(BaseSettings):
     loglevel: str = 'INFO'
 
     model_config = SettingsConfigDict(
-        env_file="enricher/.env", env_file_encoding="utf-8"
+        env_file="enricher/.env", env_file_encoding="utf-8", extra='ignore'
+    )
+
+
+class PgSettings(BaseSettings):
+    dbname: str = 'str'
+    user: str = 'str'
+    password: str = 'str'
+    host: str = 'str'
+    port: int = 111
+
+    model_config = SettingsConfigDict(
+        env_file="enricher/.env", env_file_encoding="utf-8", extra='ignore'
     )
 
 
 config = AppSettings()
+
+pg_config = PgSettings()
