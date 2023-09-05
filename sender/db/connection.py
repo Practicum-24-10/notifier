@@ -2,8 +2,10 @@ import psycopg2
 from psycopg2.extensions import connection
 
 
-def create_pg_conn(dbname: str, host: str, port: int, user: str, password: str, cursor_factory) -> connection:
-    
+def create_pg_conn(dbname: str, host: str,
+                   port: int, user: str,
+                   password: str, cursor_factory) -> connection:
+
     pg_connection = psycopg2.connect(
         dbname=dbname,
         host=host,

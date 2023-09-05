@@ -1,27 +1,27 @@
 import json
 import logging
 
-from sender.app.email_sender import EmailSender
 from sender.models.models import EmailTemplate
 
 logger = logging.getLogger(__name__)
 
 
 class MessageHandler:
-    """Class for validating and sending message"""
+    def __init__(self, sender):
+        self.sender = sender
 
     async def send_message(self, message):
 
-        sender = EmailSender()
-        template = EmailTemplate()
+        template = EmailTemplate
 
         try:
             email = message["email"]
             message_text = message["message"]
+            logger.info(email, message_text)
         except json.JSONDecodeError:
             logger.warning("Сообщение из RabbitMQ не удалось обработать")
 
         to_send = template.parse_obj(message)
-        sender.send(data=to_send)
+        self.sender.send(data=to_send)
 
         logger.warning("Сообщение отправлено")

@@ -26,8 +26,9 @@ class NotificationPostgresService(AbstractNotificationDatabaseService):
                 return result
 
     def save_notification_to_db(self, notification: Notification) -> None:
-        query = f'''INSERT INTO {self.tablename} (notification_id, user_id, content_id, type, created_at)
-                    VALUES (%s, %s, %s, %s, %s);'''
+        query = f'''INSERT INTO {self.tablename} (notification_id, user_id,
+        content_id, type, created_at)
+        VALUES (%s, %s, %s, %s, %s);'''
         values = (
             notification.notification_id,
             notification.user_id,
@@ -38,7 +39,7 @@ class NotificationPostgresService(AbstractNotificationDatabaseService):
         self._execute_query(query, values)
 
     def get_notifications(self):
-        query = f"SELECT * FROM notifications;"
+        query = "SELECT * FROM notifications;"
         result = self._execute_query(query)
 
         return result

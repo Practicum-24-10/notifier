@@ -20,11 +20,13 @@ class PostgresSettings(MainSettings):
     host: str = Field('notifications-db', env='POSTGRES_HOST')
     port: int = Field(5432, env='POSTGRES_PORT')
 
+
 class EmailServerSettings(MainSettings):
     address: str = Field('smtp.yandex.ru', env='EMAIL_SERVER_ADDRESS')
     port: int = Field(465, env='EMAIL_SERVER_PORT')
     login: str = Field('test', env='EMAIL_ACCOUNT_LOGIN')
     password: str = Field('test', env='EMAIL_ACCOUNT_PASSWORD')
+
 
 config = AppSettings()
 postgres_config = PostgresSettings()

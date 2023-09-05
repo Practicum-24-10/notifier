@@ -11,13 +11,13 @@ from sender.config.settings import config, postgres_config, email_service_config
 from sender.db.connection import create_pg_conn
 
 
-async def main():
+async def main(email_sender):
     rabbit = RabbitMQConnect(amqp_url=config.rabbit_url)
     await rabbit.connect()
     consumer = RabbitMQConsumer(
         queue_name=config.sending_queue, connection=rabbit.connection
     )
-    handler = MessageHandler()
+    handler = MessageHandler(email_sender)
     try:
         await consumer.start_consuming(handler.send_message)
     finally:
@@ -30,4 +30,4 @@ if __name__ == "__main__":
             connection=pg_conn, tablename='notifications')
         email_sender = EmailSender(email_service_config, postgres_service)
 
-        asyncio.run(main())
+        asyncio.run(main(email_sender))

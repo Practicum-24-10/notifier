@@ -13,5 +13,5 @@ class AbstractNotificationDatabaseService(ABC):
         pass
 
     @abstractmethod
-    def get_notification_by_id(self):
+    def get_notification_by_id(self, notification_id, user_id):
         pass
