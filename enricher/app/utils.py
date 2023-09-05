@@ -1,7 +1,8 @@
 import aiohttp
+import psycopg
 
-from enricher.configs.settings import config
 from enricher.configs.logger import logger
+from enricher.configs.settings import config, pg_config
 
 
 async def get_user_info(user_id):
@@ -28,6 +29,11 @@ async def get_user_info(user_id):
 
 
 async def get_template(template_id):
-    # Тут должен быть запрос к TemplateDB
-    template_content = "Привет, {{ name }}! Поздравляем с регистрацией аккаунта в нашем сервисе!"  # noqa
-    return template_content
+    async with await psycopg.AsyncConnection.connect(**pg_config.model_dump()) as aconn:
+        async with aconn.cursor() as acur:
+            await acur.execute(
+                "SELECT template_content FROM templates WHERE template_id = %s",
+                (template_id,),
+            )
+            template_content = await acur.fetchone()
+            return template_content
