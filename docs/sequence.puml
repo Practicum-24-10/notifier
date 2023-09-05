@@ -17,9 +17,15 @@ end
 API -> EnrichmentQueue: Добавить в очередь обогащения
 
 EnrichmentQueue -> WorkerEnricher: Обогатить
+
 WorkerEnricher -> Auth: Запросить данные о юзере
 
-Auth --> WorkerEnricher: Успешно
+alt success
+    Auth --> WorkerEnricher: Успешно
+else unsuccess
+    Auth --> WorkerEnricher: Сервис недоступен
+    WorkerEnricher -> EnrichmentQueue: Вернуть в очередь
+end
 
 WorkerEnricher -> TemplateDB: Получить шаблон по id
 TemplateDB --> WorkerEnricher: Ok
